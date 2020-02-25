@@ -58,34 +58,41 @@ const app = props => {
   // useState() function can be used multiple times
   const [personsState, setPersonsState] = useState({
     persons: [
-      { name: 'Max', age: 28 },
-      { name: 'Manu', age: 29 },
-      { name: 'Miguel', age: 19 }
+      { id: 'asfa1', name: 'Max', age: 28 },
+      { id: 'vasdf1', name: 'Manu', age: 29 },
+      { id: 'asdf11', name: 'Miguel', age: 19 }
     ],
   });
   const [otherState, setOtherState] = useState('some other value');
+  const [showPersons,setShowPersons] = useState(false);
   console.log(personsState, otherState);
   //state only works when extending Component class, react hooks will be taught in the future
   // the jsx way: which allows syntatic sugar by writing pseudo html, because some html keywords are not allowed, like class,etc.
-  const switchNameHandler = (newName) => {
-    //console.log('Was clicked');
+  const nameChangedHandler = (event,id) => {
+    const personIndex = personsState.persons.findIndex(p=>{
+      return p.id===id;
+    });
+    console.log('person: ',personIndex);
+    const person = {...personsState.persons[personIndex]};//better practice
+    person.name=event.target.value;
+    const persons = [...personsState.persons];
+    persons[personIndex]=person;
     setPersonsState({
-      persons: [
-        { name: newName, age: 28 },
-        { name: 'Manu', age: 29 },
-        { name: 'Miguel', age: 19 },
-      ]
-    });// to update the dom in Component based in classes,
-  };
-  const nameChangedHandler = (event) => {
-    setPersonsState({
-      persons: [
-        { name: 'Max', age: 28 },
-        { name: event.target.value, age: 29 },
-        { name: 'Miguel', age: 19 },
-      ]
+      persons: persons
     });
   };
+  const deletePersonHandler = (personIndex) =>{
+    const persons = [...personsState.persons]; // good practice to create copy before modifying directly the state!!!
+    persons.splice(personIndex,1);
+    setPersonsState({persons: persons});
+  }
+  const togglePersonsHandler = () =>{
+    setShowPersons(!showPersons);
+    //in a class based it would moreless
+    /*
+    this.setState({showPersons:!this.state.showPersons});
+    */
+  }
   const style = {
     backgroundColor: 'white',
     font: 'inherit',
@@ -93,31 +100,63 @@ const app = props => {
     padding: '8px',
     cursor: 'pointer',
   }; //inline styling
+  //Rendering Content Conditionally:
+  /*return (
+    //this code is jsx (a syntatic sugar), it works both in .js and jsx because it does not depend on the extension of the file
+    //calling myFunction.bind() is better than calling ()=> myFuncion (...) in terms of performance
+    <div className="App">
+      <h1>Hi, I'm a React App</h1>
+      <p>This is really working!</p>
+      <button style={style} onClick={togglePersonsHandler}>Toogle Persons</button>
+      {showPersons ? <div>
+        <Person
+          name={personsState.persons[0].name}
+          age={personsState.persons[0].age}
+          click={switchNameHandler.bind(this, 'Maximilian')}
+        />
+        <Person
+          name={personsState.persons[1].name}
+          age={personsState.persons[1].age}
+          click={() => switchNameHandler('Master')}
+          changed={nameChangedHandler}
+        >
+          This is inside Manu
+        </Person>
+        <Person
+          name={personsState.persons[2].name}
+          age={personsState.persons[2].age}
+          click={switchNameHandler.bind(this, '')}
+        />
+      </div> : null }
+    </div>
+    //it is a very good practice to wrap everything into a root element, e.g. <div className="App"> ... </div>
+  );//these parentheses is to avoid getting error messages*/
+  //Rendering Dynamic Content "The Javascript Way" (Prefered way):
+  let persons  = null;
+  if(showPersons){
+    persons = (
+      <div>
+        {personsState.persons.map((person,index) =>{
+          return <Person
+            name={person.name}
+            age={person.age}
+            click={deletePersonHandler.bind(this,index)}
+            key={person.id}
+            changed={(event) => nameChangedHandler(event,person.id)}
+          />
+        })}
+      </div>
+    ); // key is very important to give React a way of indentifying internally which element is each tag and to be very efficiente,
+    //if not key is provided, a warning is logged out in the console  
+  }
   return (
     //this code is jsx (a syntatic sugar), it works both in .js and jsx because it does not depend on the extension of the file
     //calling myFunction.bind() is better than calling ()=> myFuncion (...) in terms of performance
     <div className="App">
       <h1>Hi, I'm a React App</h1>
       <p>This is really working!</p>
-      <button style={style} onClick={() => switchNameHandler('Name')}>Switch Name</button>
-      <Person
-        name={personsState.persons[0].name}
-        age={personsState.persons[0].age}
-        click={switchNameHandler.bind(this, 'Maximilian')}
-      />
-      <Person
-        name={personsState.persons[1].name}
-        age={personsState.persons[1].age}
-        click={() => switchNameHandler('Master')}
-        changed={nameChangedHandler}
-      >
-        This is inside Manu
-      </Person>
-      <Person
-        name={personsState.persons[2].name}
-        age={personsState.persons[2].age}
-        click={switchNameHandler.bind(this, '')}
-      />
+      <button style={style} onClick={togglePersonsHandler}>Toogle Persons</button>
+      {persons}
     </div>
     //it is a very good practice to wrap everything into a root element, e.g. <div className="App"> ... </div>
   );//these parentheses is to avoid getting error messages
