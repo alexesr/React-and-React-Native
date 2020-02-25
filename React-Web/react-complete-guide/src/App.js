@@ -52,7 +52,7 @@ class App extends Component {
 
 import React, { useState } from 'react';
 
-const app = props => {
+const App = props => {
   //With React Hooks we manage state with a lot of states slices
   // the first array element returns the state and the second returns are function to set the state
   // useState() function can be used multiple times
@@ -164,4 +164,4 @@ const app = props => {
   //return React.createElement('div',{className:'App'},React.createElement('h1',null,'Hi, I\'m a React App!!!'));
 }
 
-export default app;
+export default App;
