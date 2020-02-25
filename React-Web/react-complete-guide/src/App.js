@@ -1,6 +1,7 @@
 import Person from './Person/Person';
 // importing React is very important to allow rendering, because behind the scenes the jsx uses React. methods
 // render is the method called by react to render
+import Radium , {StyleRoot} from 'radium';
 import './App.css';
 
 //This is a stateful way
@@ -93,12 +94,18 @@ const App = props => {
     this.setState({showPersons:!this.state.showPersons});
     */
   }
+  // the hover selector (pseudo selector) is selected with :
   const style = {
-    backgroundColor: 'white',
+    backgroundColor: 'green',
+    color:'white',
     font: 'inherit',
     border: '1px solid blue',
     padding: '8px',
     cursor: 'pointer',
+    ':hover': {
+      backgroundColor: 'lightgreen',
+      color: 'black'
+    }
   }; //inline styling
   //Rendering Content Conditionally:
   /*return (
@@ -148,20 +155,36 @@ const App = props => {
       </div>
     ); // key is very important to give React a way of indentifying internally which element is each tag and to be very efficiente,
     //if not key is provided, a warning is logged out in the console  
+    style.backgroundColor='red';
+    style[':hover'] = {
+      backgroundColor: 'salmon',
+      color: 'black',
+    };
+  }
+  let classes = []// string red bold
+  if(personsState.persons.length<=2){
+    classes.push('red');
+  }
+  if(personsState.persons.length<=1){
+    classes.push('bold');
   }
   return (
     //this code is jsx (a syntatic sugar), it works both in .js and jsx because it does not depend on the extension of the file
     //calling myFunction.bind() is better than calling ()=> myFuncion (...) in terms of performance
-    <div className="App">
-      <h1>Hi, I'm a React App</h1>
-      <p>This is really working!</p>
-      <button style={style} onClick={togglePersonsHandler}>Toogle Persons</button>
-      {persons}
-    </div>
+    <StyleRoot>
+      <div className="App">
+        <h1>Hi, I'm a React App</h1>
+        <p className={classes.join(' ')}> This is really working!</p>
+        <button style={style} onClick={togglePersonsHandler}>Toogle Persons</button>
+        {persons}
+      </div>
+    </StyleRoot>
     //it is a very good practice to wrap everything into a root element, e.g. <div className="App"> ... </div>
   );//these parentheses is to avoid getting error messages
   //the manual way
   //return React.createElement('div',{className:'App'},React.createElement('h1',null,'Hi, I\'m a React App!!!'));
 }
 
-export default App;
+export default Radium(App); //higher order component, 
+//component inside component that injects extra functionality,
+//that can be used with class and functional components
