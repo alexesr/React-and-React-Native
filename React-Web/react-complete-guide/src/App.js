@@ -398,17 +398,17 @@ const App = props => {
   //return React.createElement('div',{className:'App'},React.createElement('h1',null,'Hi, I\'m a React App!!!'));
 }*/
 
-export default App; //higher order component, 
+//export default App; //higher order component, 
 //component inside component that injects extra functionality,
 //that can be used with class and functional components
 
 //!!!Using CSS Modules
 ///->NEW WAY WITH HOOK since React 16.8 version, using nested functions
+import classes from './App.css' // supported now by the undelaying build scripts,because now it transforms every classname to a unique one and returns a map with the properties
 import Person from './Person/Person';
 // importing React is very important to allow rendering, because behind the scenes the jsx uses React. methods
 // render is the method called by react to render
 //import {StyleRoot} from 'radium';
-import './App.css';
 
 import React, { useState } from 'react';
 
@@ -499,6 +499,7 @@ const App = props => {
   );//these parentheses is to avoid getting error messages*/
   //Rendering Dynamic Content "The Javascript Way" (Prefered way):
   let persons  = null;
+  let btnClass ='';
   if(showPersons){
     persons = (
       <div>
@@ -519,23 +520,25 @@ const App = props => {
       backgroundColor: 'salmon',
       color: 'black',
     };*/
+    btnClass = classes.Red;
   }
-  let classes = []// string red bold
+  let assignedClasses = []// string red bold
   if(personsState.persons.length<=2){
-    classes.push('red');
+    assignedClasses.push(classes.red);
   }
   if(personsState.persons.length<=1){
-    classes.push('bold');
+    assignedClasses.push(classes.bold);
   }
+  console.log(classes.Button);
   return (
     //this code is jsx (a syntatic sugar), it works both in .js and jsx because it does not depend on the extension of the file
     //calling myFunction.bind() is better than calling ()=> myFuncion (...) in terms of performance
-      <div className="App">
+      <div className={classes.App}>
         <h1>Hi, I'm a React App</h1>
-        <p className={classes.join(' ')}> This is really working!</p>
-        <StyledButton alt={showPersons} onClick={togglePersonsHandler}>
+        <p className={assignedClasses.join(' ')}> This is really working!</p>
+        <button className={btnClass} onClick={togglePersonsHandler}>
           Toogle Persons
-        </StyledButton>
+        </button>
         {persons}
       </div>
     //it is a very good practice to wrap everything into a root element, e.g. <div className="App"> ... </div>
