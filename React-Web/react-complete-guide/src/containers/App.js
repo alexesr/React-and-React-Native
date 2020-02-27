@@ -405,7 +405,8 @@ const App = props => {
 //!!!Using CSS Modules
 ///->NEW WAY WITH HOOK since React 16.8 version, using nested functions
 import classes from './App.css' // supported now by the undelaying build scripts,because now it transforms every classname to a unique one and returns a map with the properties
-import Person from './Person/Person';
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
 // importing React is very important to allow rendering, because behind the scenes the jsx uses React. methods
 // render is the method called by react to render
 //import {StyleRoot} from 'radium';
@@ -423,9 +424,9 @@ const App = props => {
       { id: 'asdf11', name: 'Miguel', age: 19 }
     ],
   });
-  const [otherState, setOtherState] = useState('some other value');
+  //const [otherState, setOtherState] = useState('some other value');
   const [showPersons,setShowPersons] = useState(false);
-  console.log(personsState, otherState);
+  //console.log(personsState, otherState);
   //state only works when extending Component class, react hooks will be taught in the future
   // the jsx way: which allows syntatic sugar by writing pseudo html, because some html keywords are not allowed, like class,etc.
   const nameChangedHandler = (event,id) => {
@@ -499,46 +500,30 @@ const App = props => {
   );//these parentheses is to avoid getting error messages*/
   //Rendering Dynamic Content "The Javascript Way" (Prefered way):
   let persons  = null;
-  let btnClass ='';
+  console.log('App persons: ',personsState.persons);
   if(showPersons){
-    persons = (
-      <div>
-        {personsState.persons.map((person,index) =>{
-          return <Person
-            name={person.name}
-            age={person.age}
-            click={deletePersonHandler.bind(this,index)}
-            key={person.id}
-            changed={(event) => nameChangedHandler(event,person.id)}
-          />
-        })}
-      </div>
-    ); // key is very important to give React a way of indentifying internally which element is each tag and to be very efficiente,
+    persons =
+      <Persons 
+        persons={personsState.persons}
+        clicked={deletePersonHandler}
+        changed={nameChangedHandler}/>; // key is very important to give React a way of indentifying internally which element is each tag and to be very efficiente,
     //if not key is provided, a warning is logged out in the console  
     /*style.backgroundColor='red';
     style[':hover'] = {
       backgroundColor: 'salmon',
       color: 'black',
     };*/
-    btnClass = classes.Red;
+    
   }
-  let assignedClasses = []// string red bold
-  if(personsState.persons.length<=2){
-    assignedClasses.push(classes.red);
-  }
-  if(personsState.persons.length<=1){
-    assignedClasses.push(classes.bold);
-  }
-  console.log(classes.Button);
+  
   return (
     //this code is jsx (a syntatic sugar), it works both in .js and jsx because it does not depend on the extension of the file
     //calling myFunction.bind() is better than calling ()=> myFuncion (...) in terms of performance
       <div className={classes.App}>
-        <h1>Hi, I'm a React App</h1>
-        <p className={assignedClasses.join(' ')}> This is really working!</p>
-        <button className={btnClass} onClick={togglePersonsHandler}>
-          Toogle Persons
-        </button>
+        <Cockpit
+          showPersons={showPersons}
+          persons={personsState.persons}
+          clicked={togglePersonsHandler}/>
         {persons}
       </div>
     //it is a very good practice to wrap everything into a root element, e.g. <div className="App"> ... </div>
