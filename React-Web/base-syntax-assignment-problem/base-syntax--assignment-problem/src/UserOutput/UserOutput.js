@@ -2,7 +2,7 @@ import React from 'react';
 
 
 
-const UserInput = (props)=>{
+const UserOutput = (props)=>{
     return (
         <div>
             <p>{props.username}</p>
@@ -11,4 +11,4 @@ const UserInput = (props)=>{
     );
 }
 
-export default UserInput;
+export default UserOutput;
