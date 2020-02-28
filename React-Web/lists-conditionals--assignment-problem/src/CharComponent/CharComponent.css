@@ -1,0 +1,12 @@
+.text-box{
+    display: inline-block;
+    padding: 16px;
+    text-align: center;
+    margin: 16px;
+    border: 1px solid salmon;
+    cursor: pointer;
+   
+}
+.text-box:hover{
+    background-color: lightcoral;
+}
