@@ -404,7 +404,7 @@ const App = props => {
 
 //!!!Using CSS Modules
 ///->NEW WAY WITH HOOK since React 16.8 version, using nested functions
-import classes from './App.css' // supported now by the undelaying build scripts,because now it transforms every classname to a unique one and returns a map with the properties
+/*import classes from './App.css' // supported now by the undelaying build scripts,because now it transforms every classname to a unique one and returns a map with the properties
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
 // importing React is very important to allow rendering, because behind the scenes the jsx uses React. methods
@@ -449,6 +449,170 @@ const App = props => {
   }
   const togglePersonsHandler = () =>{
     setShowPersons(!showPersons);
+    //in a class based it would moreless
+    /*
+    this.setState({showPersons:!this.state.showPersons});
+    */
+  /*}
+  // the hover selector (pseudo selector) is selected with :
+  /*const style = {
+    backgroundColor: 'green',
+    color:'white',
+    font: 'inherit',
+    border: '1px solid blue',
+    padding: '8px',
+    cursor: 'pointer',
+    ':hover': {
+      backgroundColor: 'lightgreen',
+      color: 'black'
+    }
+  };*/ //inline styling
+  //Rendering Content Conditionally:
+  /*return (
+    //this code is jsx (a syntatic sugar), it works both in .js and jsx because it does not depend on the extension of the file
+    //calling myFunction.bind() is better than calling ()=> myFuncion (...) in terms of performance
+    <div className="App">
+      <h1>Hi, I'm a React App</h1>
+      <p>This is really working!</p>
+      <button style={style} onClick={togglePersonsHandler}>Toogle Persons</button>
+      {showPersons ? <div>
+        <Person
+          name={personsState.persons[0].name}
+          age={personsState.persons[0].age}
+          click={switchNameHandler.bind(this, 'Maximilian')}
+        />
+        <Person
+          name={personsState.persons[1].name}
+          age={personsState.persons[1].age}
+          click={() => switchNameHandler('Master')}
+          changed={nameChangedHandler}
+        >
+          This is inside Manu
+        </Person>
+        <Person
+          name={personsState.persons[2].name}
+          age={personsState.persons[2].age}
+          click={switchNameHandler.bind(this, '')}
+        />
+      </div> : null }
+    </div>
+    //it is a very good practice to wrap everything into a root element, e.g. <div className="App"> ... </div>
+  );//these parentheses is to avoid getting error messages*/
+  //Rendering Dynamic Content "The Javascript Way" (Prefered way):
+  /*let persons  = null;
+  console.log('App persons: ',personsState.persons);
+  if(showPersons){
+    persons =
+      <Persons 
+        persons={personsState.persons}
+        clicked={deletePersonHandler}
+        changed={nameChangedHandler}/>; // key is very important to give React a way of indentifying internally which element is each tag and to be very efficiente,
+    //if not key is provided, a warning is logged out in the console  
+    /*style.backgroundColor='red';
+    style[':hover'] = {
+      backgroundColor: 'salmon',
+      color: 'black',
+    };*/
+    
+  /*}
+  
+  return (
+    //this code is jsx (a syntatic sugar), it works both in .js and jsx because it does not depend on the extension of the file
+    //calling myFunction.bind() is better than calling ()=> myFuncion (...) in terms of performance
+      <div className={classes.App}>
+        <Cockpit
+          title = {props.appTitle}
+          showPersons={showPersons}
+          persons={personsState.persons}
+          clicked={togglePersonsHandler}/>
+        {persons}
+      </div>
+    //it is a very good practice to wrap everything into a root element, e.g. <div className="App"> ... </div>
+  );//these parentheses is to avoid getting error messages
+  //the manual way
+  //return React.createElement('div',{className:'App'},React.createElement('h1',null,'Hi, I\'m a React App!!!'));
+}
+
+export default App; //higher order component, */
+
+//!!!Using Lifecycle Hooks in Class Based Component and CSS Modules
+///->NEW WAY WITH HOOK since React 16.8 version, using nested functions
+import classes from './App.css' // supported now by the undelaying build scripts,because now it transforms every classname to a unique one and returns a map with the properties
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
+// importing React is very important to allow rendering, because behind the scenes the jsx uses React. methods
+// render is the method called by react to render
+//import {StyleRoot} from 'radium';
+
+import React, { Component } from 'react';
+
+class App extends Component {
+  constructor(props){
+    //for state initialization ONLY, NOT used cause side-effects, like http requests etc.!!
+    super(props);
+    console.log('[App.js] constructor');
+  }
+  
+  //in the modern syntax, this is already executed in a constructor
+  state = {
+    persons: [
+      { id: 'asfa1', name: 'Max', age: 28 },
+      { id: 'vasdf1', name: 'Manu', age: 29 },
+      { id: 'asdf11', name: 'Miguel', age: 19 }
+    ],
+    showPersons: false
+  };
+
+  static getDerivedStateFromProps(props,state){
+    //for state syncying ONLY, NOT used for cause side-effects, like http requests etc.!!
+    console.log('[App.js] getDerivedStateFromProps',props); 
+    return state;
+  }
+
+  /*//legacy
+  componentWillMount(){
+    console.log('[App.js] componentWillMount');
+  }*/
+
+  //componentDidMount(), shouldComponentUpdate() and componentDidUpdate() are the most used lifecycle hooks
+
+
+  componentDidMount(){
+    console.log('[App.js] componentDidMount');
+    //for Cause side effects ONLY, like http request etc., NOT used for state syncying!!!!
+  }
+
+  shouldComponentUpdate(){
+    console.log('[App.js] shouldComponentUpdate');
+    return true;
+  }
+
+  componentDidUpdate(){
+    console.log('[App.js] componentDidUpdate');
+  }
+
+  //state only works when extending Component class, react hooks will be taught in the future
+  // the jsx way: which allows syntatic sugar by writing pseudo html, because some html keywords are not allowed, like class,etc.
+  nameChangedHandler = (event,id) => {
+    const personIndex = this.state.persons.findIndex(p=>{
+      return p.id===id;
+    });
+    console.log('person: ',personIndex);
+    const person = {...this.state.persons[personIndex]};//better practice
+    person.name=event.target.value;
+    const persons = [...this.state.persons];
+    persons[personIndex]=person;
+    this.setState({
+      persons: persons
+    });
+  };
+  deletePersonHandler = (personIndex) =>{
+    const persons = [...this.state.persons.persons]; // good practice to create copy before modifying directly the state!!!
+    persons.splice(personIndex,1);
+    this.setState({persons: persons});
+  }
+  togglePersonsHandler = () =>{
+    this.setState({showPersons: !this.state.showPersons});
     //in a class based it would moreless
     /*
     this.setState({showPersons:!this.state.showPersons});
@@ -499,37 +663,40 @@ const App = props => {
     //it is a very good practice to wrap everything into a root element, e.g. <div className="App"> ... </div>
   );//these parentheses is to avoid getting error messages*/
   //Rendering Dynamic Content "The Javascript Way" (Prefered way):
-  let persons  = null;
-  console.log('App persons: ',personsState.persons);
-  if(showPersons){
-    persons =
-      <Persons 
-        persons={personsState.persons}
-        clicked={deletePersonHandler}
-        changed={nameChangedHandler}/>; // key is very important to give React a way of indentifying internally which element is each tag and to be very efficiente,
-    //if not key is provided, a warning is logged out in the console  
-    /*style.backgroundColor='red';
-    style[':hover'] = {
-      backgroundColor: 'salmon',
-      color: 'black',
-    };*/
-    
-  }
-  
-  return (
-    //this code is jsx (a syntatic sugar), it works both in .js and jsx because it does not depend on the extension of the file
-    //calling myFunction.bind() is better than calling ()=> myFuncion (...) in terms of performance
-      <div className={classes.App}>
-        <Cockpit
-          showPersons={showPersons}
-          persons={personsState.persons}
-          clicked={togglePersonsHandler}/>
-        {persons}
-      </div>
-    //it is a very good practice to wrap everything into a root element, e.g. <div className="App"> ... </div>
-  );//these parentheses is to avoid getting error messages
+  render(){
+    console.log('[App.js] render');
+    let persons  = null;
+    //console.log('App persons: ',this.state.persons);
+    if(this.state.showPersons){
+      persons =
+        <Persons 
+          persons={this.state.persons}
+          clicked={this.deletePersonHandler}
+          changed={this.nameChangedHandler}/>; // key is very important to give React a way of indentifying internally which element is each tag and to be very efficiente,
+      //if not key is provided, a warning is logged out in the console  
+      /*style.backgroundColor='red';
+      style[':hover'] = {
+        backgroundColor: 'salmon',
+        color: 'black',
+      };*/
+      
+    }
+    return (
+      //this code is jsx (a syntatic sugar), it works both in .js and jsx because it does not depend on the extension of the file
+      //calling myFunction.bind() is better than calling ()=> myFuncion (...) in terms of performance
+        <div className={classes.App}>
+          <Cockpit
+            title = {this.props.appTitle}
+            showPersons={this.state.showPersons}
+            persons={this.state.persons}
+            clicked={this.togglePersonsHandler}/>
+          {persons}
+        </div>
+      //it is a very good practice to wrap everything into a root element, e.g. <div className="App"> ... </div>
+    );//these parentheses is to avoid getting error messages
   //the manual way
   //return React.createElement('div',{className:'App'},React.createElement('h1',null,'Hi, I\'m a React App!!!'));
+  }
 }
 
 export default App; //higher order component, 
