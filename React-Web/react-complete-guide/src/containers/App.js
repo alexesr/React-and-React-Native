@@ -560,7 +560,8 @@ class App extends Component {
       { id: 'vasdf1', name: 'Manu', age: 29 },
       { id: 'asdf11', name: 'Miguel', age: 19 }
     ],
-    showPersons: false
+    showPersons: false,
+    showCockpit: true
   };
 
   static getDerivedStateFromProps(props,state){
@@ -685,11 +686,17 @@ class App extends Component {
       //this code is jsx (a syntatic sugar), it works both in .js and jsx because it does not depend on the extension of the file
       //calling myFunction.bind() is better than calling ()=> myFuncion (...) in terms of performance
         <div className={classes.App}>
-          <Cockpit
+          <button
+            onClick={()=>{
+              this.setState({showCockpit: false});
+            }}
+          >Remove Cockpit</button>
+          {this.state.showCockpit ? (<Cockpit
             title = {this.props.appTitle}
             showPersons={this.state.showPersons}
             persons={this.state.persons}
             clicked={this.togglePersonsHandler}/>
+          ):null}
           {persons}
         </div>
       //it is a very good practice to wrap everything into a root element, e.g. <div className="App"> ... </div>

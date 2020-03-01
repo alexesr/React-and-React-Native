@@ -29,6 +29,11 @@ class Persons extends Component {
 
   }*/
 
+  componentWillUnmount(){
+    //method that runs right before this component will unmount
+    console.log('[Persons.js] componentWillUnmount');
+  }
+
   componentDidUpdate(prevProps,prevState,snapshot){ // most used hook
     console.log('[Persons.js] componentDidUpdate');
     console.log(snapshot);
