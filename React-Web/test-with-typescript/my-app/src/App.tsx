@@ -4,7 +4,7 @@ import './App.css';
 import Input from './components/Input/Input';
 import Output from './components/Output/Output';
 
-class  App extends Component {
+export default class  App extends Component {
 
   state = {
     inputValue: ''
@@ -26,4 +26,3 @@ class  App extends Component {
   }
 }
 
-export default App;
