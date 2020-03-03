@@ -542,6 +542,7 @@ import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
 import withClass from '../hoc/withClass';
 import Aux from '../hoc/Auxiliary';
+import AuthContext from '../context/auth-context';//wrap all parts that need authentication 
 // importing React is very important to allow rendering, because behind the scenes the jsx uses React. methods
 // render is the method called by react to render
 //import {StyleRoot} from 'radium';
@@ -563,7 +564,8 @@ class App extends Component {
       { id: 'asdf11', name: 'Miguel', age: 19 }
     ],
     showPersons: false,
-    showCockpit: true
+    showCockpit: true,
+    authenticated: false
   };
 
   static getDerivedStateFromProps(props,state){
@@ -630,6 +632,9 @@ class App extends Component {
     this.setState({showPersons:!this.state.showPersons});
     */
   }
+  loginHandler = () =>{
+    this.setState({authenticated: true});
+  }
   // the hover selector (pseudo selector) is selected with :
   /*const style = {
     backgroundColor: 'green',
@@ -684,7 +689,8 @@ class App extends Component {
         <Persons 
           persons={this.state.persons}
           clicked={this.deletePersonHandler}
-          changed={this.nameChangedHandler}/>; // key is very important to give React a way of indentifying internally which element is each tag and to be very efficiente,
+          changed={this.nameChangedHandler}
+          isAuthenticated={this.state.authenticated}/>; // key is very important to give React a way of indentifying internally which element is each tag and to be very efficiente,
       //if not key is provided, a warning is logged out in the console  
       /*style.backgroundColor='red';
       style[':hover'] = {
@@ -702,13 +708,19 @@ class App extends Component {
               this.setState({showCockpit: false});
             }}
           >Remove Cockpit</button>
-          {this.state.showCockpit ? (<Cockpit
-            title = {this.props.appTitle}
-            showPersons={this.state.showPersons}
-            personsLength={this.state.persons.length}
-            clicked={this.togglePersonsHandler}/>
-          ):null}
-          {persons}
+          <AuthContext.Provider value={{
+            authenticated: this.state.authenticated,
+            login: this.loginHandler
+            }}>
+              {this.state.showCockpit ? (<Cockpit
+                title = {this.props.appTitle}
+                showPersons={this.state.showPersons}
+                personsLength={this.state.persons.length}
+                clicked={this.togglePersonsHandler}
+                login={this.loginHandler}/>
+              ):null}
+              {persons}
+          </AuthContext.Provider>
         </Aux>
       //it is a very good practice to wrap everything into a root element, e.g. <div className="App"> ... </div>
     );//these parentheses is to avoid getting error messages
