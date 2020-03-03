@@ -10,7 +10,7 @@ class  App extends Component {
     inputValue: ''
   };
 
-  inputHandler(event: ChangeEvent<HTMLInputElement>): void{
+  inputHandler = (event: ChangeEvent<HTMLInputElement>): void =>{
     this.setState({
       inputValue: event.target.value
     })
