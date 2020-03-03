@@ -1,8 +1,8 @@
-import React, { ChangeEvent } from 'react';
+import React , {FormEventHandler} from 'react';
 
 interface inputType{
     value: string,
-    inputHandler: any
+    inputHandler: FormEventHandler<HTMLElement>
 }
 const input = (props: inputType)=> 
     <input value={props.value} onChange={props.inputHandler}></input>
