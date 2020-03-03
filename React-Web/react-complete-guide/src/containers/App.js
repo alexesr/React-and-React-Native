@@ -690,7 +690,7 @@ class App extends Component {
           persons={this.state.persons}
           clicked={this.deletePersonHandler}
           changed={this.nameChangedHandler}
-          isAuthenticated={this.state.authenticated}/>; // key is very important to give React a way of indentifying internally which element is each tag and to be very efficiente,
+          /*isAuthenticated={this.state.authenticated}*//>; // key is very important to give React a way of indentifying internally which element is each tag and to be very efficiente,
       //if not key is provided, a warning is logged out in the console  
       /*style.backgroundColor='red';
       style[':hover'] = {
