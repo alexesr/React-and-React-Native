@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import Person from './Person/Person';
 
-class Persons extends Component {
+class Persons extends PureComponent { //PureComponent is to update if at least one the props changes (it already implements shouldComponentUpdate())
 
   /*static getDerivedStateFromProps(props, state){
     console.log('[Person.js] getDerivedStateFromProps');
@@ -14,10 +14,13 @@ class Persons extends Component {
     console.log('[Person.js] componentWillReceiveProps', props);
   }*/
 
-  shouldComponentUpdate(nextProps, nextState){
+  /*shouldComponentUpdate(nextProps, nextState){
     console.log('[Persons.js] shouldComponentUpdate');
-    return true; //return true to tell React it should continue updating, false otherwise
-  }
+    return nextProps.persons!==this.props.persons || 
+    nextProps.changed !== this.props.changed || 
+    nextProps.clicked !== this.props.clicked; ///this improves performance
+    //return true; //return true to tell React it should continue updating, false otherwise
+  }*/
 
   getSnapshotBeforeUpdate(prevProps, prevState){ // to save data before update and then use it after the update in componentDidUpdate()
     console.log('[Person.js] getSnapshotBeforeUpdate');

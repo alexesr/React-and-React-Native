@@ -540,6 +540,8 @@ export default App; //higher order component, */
 import classes from './App.css' // supported now by the undelaying build scripts,because now it transforms every classname to a unique one and returns a map with the properties
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
+import withClass from '../hoc/withClass';
+import Aux from '../hoc/Auxiliary';
 // importing React is very important to allow rendering, because behind the scenes the jsx uses React. methods
 // render is the method called by react to render
 //import {StyleRoot} from 'radium';
@@ -606,11 +608,20 @@ class App extends Component {
     this.setState({
       persons: persons
     });
+    //extra syntax to update the state that depends on the previous state
+    /*
+    this.setState((prevState,props)=>{ // prevState guarantees to be the previous state
+      //returning new state
+      return ({
+        changeCounter: prevState.changeCounter + 1 
+      });
+    });
+    */
   };
   deletePersonHandler = (personIndex) =>{
-    const persons = [...this.state.persons.persons]; // good practice to create copy before modifying directly the state!!!
+    const persons = [...this.state.persons]; // good practice to create copy before modifying directly the state!!!
     persons.splice(personIndex,1);
-    this.setState({persons: persons});
+    this.setState({persons: persons});//setState is called asynchronously, not good when future setStates depend on the old state
   }
   togglePersonsHandler = () =>{
     this.setState({showPersons: !this.state.showPersons});
@@ -685,7 +696,7 @@ class App extends Component {
     return (
       //this code is jsx (a syntatic sugar), it works both in .js and jsx because it does not depend on the extension of the file
       //calling myFunction.bind() is better than calling ()=> myFuncion (...) in terms of performance
-        <div className={classes.App}>
+        <Aux>
           <button
             onClick={()=>{
               this.setState({showCockpit: false});
@@ -694,11 +705,11 @@ class App extends Component {
           {this.state.showCockpit ? (<Cockpit
             title = {this.props.appTitle}
             showPersons={this.state.showPersons}
-            persons={this.state.persons}
+            personsLength={this.state.persons.length}
             clicked={this.togglePersonsHandler}/>
           ):null}
           {persons}
-        </div>
+        </Aux>
       //it is a very good practice to wrap everything into a root element, e.g. <div className="App"> ... </div>
     );//these parentheses is to avoid getting error messages
   //the manual way
@@ -706,4 +717,5 @@ class App extends Component {
   }
 }
 
-export default App; //higher order component, 
+export default withClass(App,classes.App); //higher order component, this way of wrapping with a high order component is recommended for
+//added logic

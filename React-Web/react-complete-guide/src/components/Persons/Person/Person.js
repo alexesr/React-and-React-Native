@@ -105,9 +105,12 @@ export default person;*/
 ///!!! Using CSS modules and Class (class is used for learning purpose but in real apps it is recommendable to have a lot of statless components):
 
 
-import React,{Component} from 'react';
+import React,{Component,Fragment} from 'react';
+import Aux from '../../../hoc/Auxiliary';
+import PropTypes from 'prop-types';
 //import './Person.css'; // Because of web pack that is used by React we can import the css file. 
 import classes from './Person.css';
+import withClass from '../../../hoc/withClass';
 //Web pack takes care of injecting the css
 
 //This is an stateless way
@@ -120,17 +123,54 @@ class  Person extends Component{  // props holds all the attributes passed in th
             width: '450px'
         }
     };*/
+    constructor(props){
+        super(props);
+        //this approach is for class based components
+        this.inputElementRef = React.createRef(); ///since 16.3
+    }
+    componentDidMount(){
+        this.inputElementRef.current.focus();
+    }
     render(){
         console.log('[Person..js] rendering...');
-        return (
+        /*return (
             <div className={classes.Person}>
                 <p onClick={this.props.click}>I'm {this.props.name} and I am {this.props.age} years old!</p>
                 <p>{this.props.children}</p>
                 <input type="text" onChange={this.props.changed} value={this.props.name}/>
             </div>
+        );*/
+        //example of returning multiple elements in root level
+        /*return [
+            <p key="i1" onClick={this.props.click}>I'm {this.props.name} and I am {this.props.age} years old!</p>,
+            <p key="i2">{this.props.children}</p>,
+            <input key="i3" type="text" onChange={this.props.changed} value={this.props.name}/>
+        ];*/
+        //outsourcing Aux from our hoc/Auxiliary.js file
+        /*return(
+            <Aux>
+                <p key="i1" onClick={this.props.click}>I'm {this.props.name} and I am {this.props.age} years old!</p>
+                <p key="i2">{this.props.children}</p>
+                <input key="i3" type="text" onChange={this.props.changed} value={this.props.name}/>
+            </Aux>
+        );*/
+        //built-in aux like element in React since React 16.2
+        return(
+            <Fragment>
+                <p key="i1" onClick={this.props.click}>I'm {this.props.name} and I am {this.props.age} years old!</p>
+                <p key="i2">{this.props.children}</p>
+                <input key="i3" /*ref={(inputEl)=>{this.inputElement = inputEl}}*/ ref={this.inputElementRef} type="text" onChange={this.props.changed} value={this.props.name}/>
+            </Fragment>
         );
     }
     //props.children refers to the elements that are inside the html tag
 }
 
-export default Person;
+Person.propTypes = {
+    click: PropTypes.func,
+    name: PropTypes.string,
+    age: PropTypes.number,
+    changed: PropTypes.func
+}; // a property that will throw an error in development mode if the props are not passed correctly, propTypes can get advanced
+
+export default withClass(Person,classes.Person);
