@@ -1,10 +1,10 @@
 import React , {Fragment, ReactNode} from 'react';
 
-interface type{
+interface LayoutType{
     children: ReactNode
 }
 
-const Layout = (props: type) =>
+const Layout = (props: LayoutType) =>
     <Fragment>
         <div> Toolbar, SideDrawer, Backgrop</div>
         <main>
