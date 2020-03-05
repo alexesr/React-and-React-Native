@@ -71,7 +71,8 @@ export default class BurgerBuilder extends Component<IProps,IState>{
                 <BuildControls 
                     ingredientAdded={this.addIngredientHanlder}
                     ingredientRemoved={this.removeIngredientHandler}
-                    isDisabled = {isDisabled}/>
+                    isDisabled = {isDisabled}
+                    price={this.state.totalPrice}/>
             </Fragment>
         );
     }

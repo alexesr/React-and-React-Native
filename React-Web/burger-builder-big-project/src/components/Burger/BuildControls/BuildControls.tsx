@@ -20,11 +20,13 @@ interface IProps{
     ingredientAdded: (type: keyof ingredient) => void;
     ingredientRemoved: (type: keyof ingredient) => void;
     isDisabled: Map<keyof ingredient,boolean>;
+    price: number;
 }
 
 const BuildControls = (props: IProps) =>{
     return(
         <div className={classes.BuildControls}>
+            <p>Current Price: <strong>{props.price.toFixed(2)}</strong></p>
             {controls.map(ctrl=>
                 <BuildControl 
                     key={ctrl.label} 
