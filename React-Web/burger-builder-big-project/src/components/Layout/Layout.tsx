@@ -1,6 +1,7 @@
 import React , {Fragment, ReactNode} from 'react';
 
 import classes from './Layout.module.css';
+import Toolbar from '../Navigation/Toolbar/Toolbar';
 
 interface IProps{
     children: ReactNode
@@ -8,7 +9,7 @@ interface IProps{
 
 const Layout = (props: IProps) =>
     <Fragment>
-        <div> Toolbar, SideDrawer, Backgrop</div>
+        <Toolbar/>
         <main className={classes.Content}>
             {props.children}
         </main>

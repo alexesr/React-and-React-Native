@@ -21,6 +21,8 @@ interface IProps{
     ingredientRemoved: (type: keyof ingredient) => void;
     isDisabled: Map<keyof ingredient,boolean>;
     price: number;
+    purchasable: boolean;
+    ordered: () => void;
 }
 
 const BuildControls = (props: IProps) =>{
@@ -36,6 +38,13 @@ const BuildControls = (props: IProps) =>{
                     disabled={props.isDisabled.get(ctrl.type) as boolean}
                 />
             )}
+            <button 
+                className={classes.OrderButton}
+                disabled={!props.purchasable}
+                onClick={props.ordered}
+            >
+                ORDER NOW
+            </button>
         </div>
     );
 }
