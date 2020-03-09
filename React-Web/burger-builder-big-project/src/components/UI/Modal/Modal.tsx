@@ -1,4 +1,4 @@
-import React , { ReactNode , Fragment } from 'react';
+import React , { ReactNode , Fragment , memo } from 'react';
 
 import classes from './Modal.module.css';
 import Backdrop from '../Backdrop/Backdrop';
@@ -21,4 +21,4 @@ const Modal = (props: IProps) =>
             {props.children}
         </div>
     </Fragment>
-export default Modal;
+export default memo(Modal);
