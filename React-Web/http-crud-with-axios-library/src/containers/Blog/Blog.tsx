@@ -12,13 +12,15 @@ interface IProps{
 }
 interface IState{
     posts: post[],
-    selectedPostId: number
+    selectedPostId: number,
+    error: boolean
 }
 
 class Blog extends Component<IProps,IState> {
     state = {
         posts: [] as post[],
-        selectedPostId: -1
+        selectedPostId: -1,
+        error: false
     }
 
     componentDidMount(){
@@ -32,6 +34,9 @@ class Blog extends Component<IProps,IState> {
                     }
                 });
                 this.setState({posts: updatedPosts});
+            })
+            .catch(error=>{
+                this.setState({error:true});
             });
     }
 
@@ -40,15 +45,19 @@ class Blog extends Component<IProps,IState> {
     }
 
     render () {
-        const posts = this.state.posts
-            .map(post =>{
-                return <Post 
-                            key={post.id} 
-                            title={post.title} 
-                            author={post.author}
-                            clicked ={this.postSelectedHandler.bind(this,post.id)} />        
-            }
-        );
+        let posts;
+        posts = <p style={{textAlign:'center'}}>Something went wrong!</p>;
+        if(!this.state.error){
+            posts = this.state.posts
+                .map(post =>{
+                    return <Post 
+                                key={post.id} 
+                                title={post.title} 
+                                author={post.author}
+                                clicked ={this.postSelectedHandler.bind(this,post.id)} />        
+                }
+            );
+        }
         return (
             <div>
                 <section className="Posts">
