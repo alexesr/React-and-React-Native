@@ -7,9 +7,9 @@ import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import axios from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 interface IProps{
-
 }
 interface IState{
     ingredients: ingredient;
@@ -17,6 +17,7 @@ interface IState{
     purchasable: boolean;
     purchasing: boolean;
     loading: boolean;
+    error: boolean;
 }
 
 const INGREDIENT_PRICES ={
@@ -41,18 +42,19 @@ interface order{
     deliveryMethod: string;
 }
 
-export default class BurgerBuilder extends Component<IProps,IState>{
+class BurgerBuilder extends Component<IProps,IState>{
     state = {
         ingredients: {
-            salad: 0,
-            bacon: 0,
-            cheese: 0,
-            meat: 0
+            salad: -1,
+            bacon: -1,
+            cheese: -1,
+            meat: -1
         },
         totalPrice: 4,
         purchasable: false,
         purchasing: false,
-        loading: false
+        loading: false,
+        error: false
     };
 
     updatePurchaseState(ingredients: ingredient){
@@ -101,6 +103,18 @@ export default class BurgerBuilder extends Component<IProps,IState>{
         this.setState({purchasing:false});
     }
 
+    componentDidMount(){
+        axios.get('/ingredients.json')
+            .then(response=>{
+                console.log(response);
+                this.setState({ingredients: response.data});
+            })
+            .catch(error=>{
+                console.log(error);
+                this.setState({error:true});
+            });
+    }
+
     purchaseContinueHandler = () =>{
         this.setState({loading:true});
         const order: order ={
@@ -124,7 +138,7 @@ export default class BurgerBuilder extends Component<IProps,IState>{
             .catch(error=>{
                 this.setState({loading:false,purchasing: false});
             }); //.firebase endpoint
-    }
+    }   
 
     render(){
         let isDisabled = new Map<keyof ingredient,boolean>();
@@ -135,13 +149,28 @@ export default class BurgerBuilder extends Component<IProps,IState>{
             let asKey = key as keyof ingredient;
             isDisabled.set(asKey,disabledInfo[asKey] <= 0);
         }
-        let orderSummary = 
-            <OrderSummary 
-                price={this.state.totalPrice}
-                ingredients={this.state.ingredients}
-                purchaseCancelled={this.purchaseCancelHandler}
-                purchaseContinued={this.purchaseContinueHandler}
-            />
+        let orderSummary=null;
+        let burger = this.state.error ? <p>Ingredients can't be loadead</p> : <Spinner/>;
+        if(this.state.ingredients.bacon>-1){
+            burger =<Fragment>
+                        <Burger ingredients={this.state.ingredients}/>
+                            <BuildControls 
+                                ingredientAdded={this.addIngredientHanlder}
+                                ingredientRemoved={this.removeIngredientHandler}
+                                isDisabled = {isDisabled}
+                                purchasable={this.state.purchasable}
+                                ordered={this.purchaseHandler}
+                                price={this.state.totalPrice}
+                            />
+                    </Fragment>;
+            orderSummary = 
+                <OrderSummary 
+                    price={this.state.totalPrice}
+                    ingredients={this.state.ingredients}
+                    purchaseCancelled={this.purchaseCancelHandler}
+                    purchaseContinued={this.purchaseContinueHandler}
+                />
+        }
         if(this.state.loading){
             orderSummary=<Spinner/>
         }
@@ -150,15 +179,10 @@ export default class BurgerBuilder extends Component<IProps,IState>{
                 <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
                     {orderSummary}
                 </Modal>
-                <Burger ingredients={this.state.ingredients}/>
-                <BuildControls 
-                    ingredientAdded={this.addIngredientHanlder}
-                    ingredientRemoved={this.removeIngredientHandler}
-                    isDisabled = {isDisabled}
-                    purchasable={this.state.purchasable}
-                    ordered={this.purchaseHandler}
-                    price={this.state.totalPrice}/>
+                    {burger}
             </Fragment>
         );
     }
 }
+
+export default withErrorHandler(BurgerBuilder,axios);
