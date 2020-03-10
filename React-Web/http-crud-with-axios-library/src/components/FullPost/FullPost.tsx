@@ -45,7 +45,7 @@ class FullPost extends Component<IProps,IState> {
         if(this.props.id > -1){
             post = <p style={{textAlign: 'center'}}>Loading...!</p>;
         }
-        if(this.state.loadedPost){
+        if(this.state.loadedPost.id!==-1){
             post = (
                 <div className="FullPost">
                     <h1>{this.state.loadedPost?(this.state.loadedPost).title:''}</h1>
