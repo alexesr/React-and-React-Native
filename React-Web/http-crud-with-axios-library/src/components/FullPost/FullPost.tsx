@@ -19,17 +19,24 @@ class FullPost extends Component<IProps,IState> {
     }
 
     componentDidUpdate(){
-        if(this.props.id>-1 && this.state.loadedPost.id !== this.props.id) // check that the prop id is valid and is different from the last id
+        console.log('componentDidUpdate in fullpost ',this.props.id);
+        if(this.props.id>-1 && this.state.loadedPost.id !== this.props.id){// check that the prop id is valid and is different from the last id
+            console.log('id is different');
             axios.get('/posts/'+this.props.id)
                 .then(response=>{
+                    console.log('response in full post: ',response);
                     this.setState({loadedPost:response.data});
+                })
+                .catch(error=>{
+                    console.log('error in fullpost: ',error);
                 });
+        }
     }
 
     deletePostHandler = () =>{
         axios.delete('/posts/'+this.props.id)
             .then(response =>{
-                console.log(response);
+                console.log('delete', response);
             });
     }
 

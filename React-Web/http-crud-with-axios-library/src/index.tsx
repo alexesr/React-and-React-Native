@@ -11,11 +11,11 @@ axios.interceptors.request.eject(myInterceptor);
 */
 
 axios.defaults.baseURL = 'https://jsonplaceholder.typicode.com';
-axios.defaults.headers.common['Authorization'] = 'AUTH TOKEN';
-axios.defaults.headers.post['Content-Type'] = 'application/json';
+//axios.defaults.headers.common['Authorization'] = 'AUTH TOKEN';
+//axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 axios.interceptors.request.use(((request: any): Promise<any>=>{
-    console.log(request);
+    console.log('request in index: ',request);
     return request;
 }),error =>{ // error function is triggered with errors related to not being able to send the request,etc.
     console.log(error);
@@ -23,7 +23,7 @@ axios.interceptors.request.use(((request: any): Promise<any>=>{
 });
 
 axios.interceptors.response.use(((response: any): Promise<any>=>{
-    console.log(response);
+    console.log('response in index: ',response);
     return response;
 }),error=>{
     console.log(error);
