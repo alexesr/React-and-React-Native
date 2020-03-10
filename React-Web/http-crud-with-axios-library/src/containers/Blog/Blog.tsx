@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import axios from '../../axios';
 
 import Post from '../../components/Post/Post';
 import FullPost from '../../components/FullPost/FullPost';
@@ -24,7 +24,7 @@ class Blog extends Component<IProps,IState> {
     }
 
     componentDidMount(){
-        axios.get('https://jsonplaceholder.typicode.com/posts')//after promise responses
+        axios.get('/posts')//after promise responses
             .then(response =>{
                 const posts = response.data.slice(0,4) as post[];
                 const updatedPosts = posts.map(post=>{

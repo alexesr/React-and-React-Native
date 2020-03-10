@@ -20,14 +20,14 @@ class FullPost extends Component<IProps,IState> {
 
     componentDidUpdate(){
         if(this.props.id>-1 && this.state.loadedPost.id !== this.props.id) // check that the prop id is valid and is different from the last id
-            axios.get('https://jsonplaceholder.typicode.com/posts/'+this.props.id)
+            axios.get('/posts/'+this.props.id)
                 .then(response=>{
                     this.setState({loadedPost:response.data});
                 });
     }
 
     deletePostHandler = () =>{
-        axios.delete('https://jsonplaceholder.typicode.com/posts/'+this.props.id)
+        axios.delete('/posts/'+this.props.id)
             .then(response =>{
                 console.log(response);
             });
