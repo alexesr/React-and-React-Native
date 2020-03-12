@@ -1,77 +1,47 @@
-import React, { Component } from 'react';
-import axios from '../../axios';
+import React, { Component} from 'react';
+import { Route, RouteComponentProps, withRouter } from 'react-router-dom';
 
-import Post from '../../components/Post/Post';
-import FullPost from '../../components/FullPost/FullPost';
-import NewPost from '../../components/NewPost/NewPost';
 import './Blog.css';
+import Posts from './Posts/Posts';
+import NewPost from './NewPost/NewPost';
+import { NavLink } from 'react-router-dom';
+import FullPost from './FullPost/FullPost';
+//NavLink instead of Link object to style depending on selected
 
-import post from '../../interfaces/post/post.interface';
+interface IProps extends RouteComponentProps{}
 
-interface IProps{
-}
-interface IState{
-    posts: post[],
-    selectedPostId: number,
-    error: boolean
-}
-
-class Blog extends Component<IProps,IState> {
-    state = {
-        posts: [] as post[],
-        selectedPostId: -1,
-        error: false
-    }
-
-    componentDidMount(){
-        axios.get('/posts')//after promise responses
-            .then(response =>{
-                const posts = response.data.slice(0,4) as post[];
-                const updatedPosts = posts.map(post=>{
-                    return {
-                        ...post,
-                        author: 'Max'
-                    }
-                });
-                this.setState({posts: updatedPosts});
-            })
-            .catch(error=>{
-                this.setState({error:true});
-            });
-    }
-
-    postSelectedHandler = (id: number) =>{
-        this.setState({selectedPostId: id});
-    }
-
+class Blog extends Component<IProps> {
     render () {
-        let posts;
-        posts = <p style={{textAlign:'center'}}>Something went wrong!</p>;
-        if(!this.state.error){
-            posts = this.state.posts
-                .map(post =>{
-                    return <Post 
-                                key={post.id} 
-                                title={post.title} 
-                                author={post.author}
-                                clicked ={this.postSelectedHandler.bind(this,post.id)} />        
-                }
-            );
-        }
         return (
-            <div>
-                <section className="Posts">
-                    {posts}
-                </section>
-                <section>
-                    <FullPost id={this.state.selectedPostId} />
-                </section>
-                <section>
-                    <NewPost />
-                </section>
+            <div className="Blog">
+                <header>
+                    <nav>
+                        <ul>
+                            <li><NavLink to="/"
+                                    exact  //exact to validate not only as preffix
+                                    activeStyle={{
+                                        color:'#fa923f',
+                                        textDecoration: 'underline'
+                                    }}
+                                >Home</NavLink></li>
+                                <li><NavLink to={{
+                                    pathname:"/new-post",
+                                    //activeClassName="my-active"
+                                    /*pathname:this.props.match.url + "/new-post"/*,
+                                    hash:'#submit',
+                                    search:'?quick-submit=true'*/
+                                }}>New Post</NavLink></li>
+                        </ul>
+                    </nav>
+                </header>
+                {/*<Route path="/" exact render={()=><h1>Home</h1>}/>*/}
+                <Route path="/" exact component ={Posts}/>
+                <Route path="/new-post" exact component ={NewPost}/>
+                <Route path="/:id" exact component={FullPost}></Route>
+                
             </div>
         );
     }
 }
 
-export default Blog;
+export default withRouter(Blog);

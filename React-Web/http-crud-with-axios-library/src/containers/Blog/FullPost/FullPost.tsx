@@ -3,10 +3,15 @@ import axios from 'axios';
 
 import './FullPost.css';
 
-import post , { initial } from '../../interfaces/post/post.interface';
+import post , { initial } from '../../../interfaces/post/post.interface';
+import { RouteComponentProps } from 'react-router';
 
-interface IProps{
-    id: number;
+
+interface IParams{
+    id: string;
+}
+
+interface IProps extends RouteComponentProps<IParams>{
 }
 
 interface IState{
@@ -18,11 +23,12 @@ class FullPost extends Component<IProps,IState> {
         loadedPost:{...initial} 
     }
 
-    componentDidUpdate(){
-        console.log('componentDidUpdate in fullpost ',this.props.id);
-        if(this.props.id>-1 && this.state.loadedPost.id !== this.props.id){// check that the prop id is valid and is different from the last id
+    componentDidMount(){
+        console.log('FullPost props:', this.props);
+        //console.log('componentDidUpdate in fullpost ',this.props.id);
+        if(this.props.match.params.id && this.state.loadedPost.id !== this.props.match.params.id){// check that the prop id is valid and is different from the last id
             console.log('id is different');
-            axios.get('/posts/'+this.props.id)
+            axios.get('/posts/'+this.props.match.params.id)
                 .then(response=>{
                     console.log('response in full post: ',response);
                     this.setState({loadedPost:response.data});
@@ -34,7 +40,7 @@ class FullPost extends Component<IProps,IState> {
     }
 
     deletePostHandler = () =>{
-        axios.delete('/posts/'+this.props.id)
+        axios.delete('/posts/'+this.props.match.params.id)
             .then(response =>{
                 console.log('delete', response);
             });
@@ -42,10 +48,10 @@ class FullPost extends Component<IProps,IState> {
 
     render () {
         let post = <p style={{textAlign: 'center'}}>Please select a Post!</p>;
-        if(this.props.id > -1){
+        if(this.props.match.params.id!==''){
             post = <p style={{textAlign: 'center'}}>Loading...!</p>;
         }
-        if(this.state.loadedPost.id!==-1){
+        if(this.state.loadedPost.id!==''){
             post = (
                 <div className="FullPost">
                     <h1>{this.state.loadedPost?(this.state.loadedPost).title:''}</h1>
