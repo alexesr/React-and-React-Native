@@ -25,8 +25,15 @@ class FullPost extends Component<IProps,IState> {
 
     componentDidMount(){
         console.log('FullPost props:', this.props);
+        this.loadData();
         //console.log('componentDidUpdate in fullpost ',this.props.id);
-        if(this.props.match.params.id && this.state.loadedPost.id !== this.props.match.params.id){// check that the prop id is valid and is different from the last id
+    }
+    componentDidUpdate(){
+        this.loadData();
+    }
+
+    loadData(){
+        if(this.props.match.params.id && this.state.loadedPost.id != this.props.match.params.id){// check that the prop id is valid and is different from the last id
             console.log('id is different');
             axios.get('/posts/'+this.props.match.params.id)
                 .then(response=>{

@@ -1,29 +1,35 @@
 import React, { Component} from 'react';
-import { Route, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Route, RouteComponentProps, withRouter, Redirect } from 'react-router-dom';
 
 import './Blog.css';
 import Posts from './Posts/Posts';
 import NewPost from './NewPost/NewPost';
-import { NavLink } from 'react-router-dom';
-import FullPost from './FullPost/FullPost';
+import { NavLink , Switch } from 'react-router-dom';
 //NavLink instead of Link object to style depending on selected
 
 interface IProps extends RouteComponentProps{}
 
-class Blog extends Component<IProps> {
+interface IState{
+    auth: boolean;
+}
+
+class Blog extends Component<IProps,IState> {
+    state = {
+        auth:true
+    };
     render () {
         return (
             <div className="Blog">
                 <header>
                     <nav>
                         <ul>
-                            <li><NavLink to="/"
+                            <li><NavLink to="/posts"
                                     exact  //exact to validate not only as preffix
                                     activeStyle={{
                                         color:'#fa923f',
                                         textDecoration: 'underline'
                                     }}
-                                >Home</NavLink></li>
+                                >Posts</NavLink></li>
                                 <li><NavLink to={{
                                     pathname:"/new-post",
                                     //activeClassName="my-active"
@@ -35,10 +41,13 @@ class Blog extends Component<IProps> {
                     </nav>
                 </header>
                 {/*<Route path="/" exact render={()=><h1>Home</h1>}/>*/}
-                <Route path="/" exact component ={Posts}/>
-                <Route path="/new-post" exact component ={NewPost}/>
-                <Route path="/:id" exact component={FullPost}></Route>
-                
+                <Switch> {/* to only render 1 single route at the time */}
+                    {this.state.auth?<Route path="/new-post" exact component ={NewPost}/>:null /*guard*/} 
+                    <Route path="/posts" component ={Posts}/>
+                    <Route render={()=><h1>Not found</h1>}/>
+                    {/*<Redirect from="/" to="/posts"/>/*}
+                    {/*<Route path="/" component ={Posts}/>*/}
+                </Switch>
             </div>
         );
     }

@@ -1,17 +1,21 @@
 import React , { Component } from 'react';
+import { Route } from 'react-router-dom';
 
 import post from '../../../interfaces/post/post.interface';
 import Post from '../../../components/Post/Post';
 import axios from '../../../axios';
 import './Posts.css';
 import { Link } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router';
+import FullPost from '../FullPost/FullPost';
+
 
 interface IState{
     posts: post[],
 }
-interface IProps{}
+interface IProps extends RouteComponentProps{}
 
-export default class Posts extends Component<IProps,IState>{
+class Posts extends Component<IProps,IState>{
     state = {
         posts: [] as post[],
     }
@@ -35,7 +39,10 @@ export default class Posts extends Component<IProps,IState>{
     }
 
     postSelectedHandler = (id: string) =>{
+        //navigating programatically is mostly used after an operation is finished
         //this.setState({selectedPostId: id});
+        this.props.history.push('/posts/'+id);
+        //this.props.history.push({pathname: '/posts/'+id});
     }
 
     render() {
@@ -43,18 +50,25 @@ export default class Posts extends Component<IProps,IState>{
         posts = <p style={{textAlign:'center'}}>Something went wrong!</p>;
         posts = this.state.posts
             .map(post =>{
-                return <Link key={post.id} to={'/' + post.id}>
+                return (//<Link key={post.id} to={'/' + post.id}>
                             <Post  
+                                key={post.id}
                                 title={post.title} 
                                 author={post.author}
                                 clicked ={this.postSelectedHandler.bind(this,post.id)} />
-                        </Link>        
+                        //</Link>
+                );      
             }
         );
         return (
-            <section className="Posts">
-                {posts}
-            </section>
+            <div>
+                <section className="Posts">
+                    {posts}
+                </section>
+                <Route path={this.props.match.url+'/:id'} exact component={FullPost}></Route> {/* nested route */}
+            </div>
         );
     }
 }
+
+export default withRouter(Posts);
