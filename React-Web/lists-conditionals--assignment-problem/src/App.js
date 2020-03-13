@@ -34,7 +34,7 @@ class App extends Component {
         <p>Lenght: {this.state.inputText.length}</p>
         <ValidationComponent textLenght={this.state.inputText.length}></ValidationComponent>
         {this.state.inputText.split('').map((charElement,index)=>
-            <CharComponent letter={charElement} DeleteHandler={this.eraseLetter}></CharComponent>
+            <CharComponent letter={charElement} key={index} DeleteHandler={this.eraseLetter.bind(this,index)}></CharComponent>
         )}
       </div>
     );
