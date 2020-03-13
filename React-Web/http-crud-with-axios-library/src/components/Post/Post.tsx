@@ -1,20 +1,24 @@
 import React from 'react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import './Post.css';
 
-interface IProps{
+interface IProps extends RouteComponentProps{
     title: string;
     author: string;
     clicked : () => void;
 }
 
-const post = (props: IProps) => (
-    <article className="Post" onClick={props.clicked}>
-        <h1>{props.title}</h1>
-        <div className="Info">
-            <div className="Author">{props.author}</div>
-        </div>
-    </article>
-);
+const Post = (props: IProps) => {
+    console.log(props);
+    return(
+        <article className="Post" onClick={props.clicked}>
+            <h1>{props.title}</h1>
+            <div className="Info">
+                <div className="Author">{props.author}</div>
+            </div>
+        </article>
+    );
+};
 
-export default post;
+export default withRouter(Post);//to add routing related props from the closest router props

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Redirect, RouteComponentProps } from 'react-router-dom';
 
 import './NewPost.css';
 
-interface IProps{
+interface IProps extends RouteComponentProps{
 
 }
 
@@ -11,13 +12,20 @@ interface IState {
     title: string;
     content: string;
     author: string;
+    submitted: boolean;
 }
 
 class NewPost extends Component<IProps,IState> {
     state = {
         title: '',
         content: '',
-        author: 'Max'
+        author: 'Max',
+        submitted: false
+    }
+
+    componentDidMount(){
+        //if unauth => this.props.history.replace('/posts');
+        console.log(this.props);
     }
 
     postDataHandler = () =>{
@@ -29,12 +37,19 @@ class NewPost extends Component<IProps,IState> {
         axios.post('/posts',data)
             .then(response=>{
                 console.log(response);
+                this.props.history.replace('/posts'); // to redirect
+                //this.props.setState({submitted:true});
             });
     }
 
     render () {
+        let redirect = null;
+        /*if(this.state.submitted){
+            redirect = <Redirect to="/posts/"/>;
+        }*/
         return (
             <div className="NewPost">
+                {/*redirect*/}
                 <h1>Add a Post</h1>
                 <label>Title</label>
                 <input type="text" value={this.state.title} onChange={(event) => this.setState({title: event.target.value})} />
