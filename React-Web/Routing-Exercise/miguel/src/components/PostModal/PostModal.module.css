@@ -1,0 +1,7 @@
+.PostModal footer Button:focus, .PostModal footer button:hover{
+    background-color: lightblue;
+}
+.PostModal footer Button{
+    border-radius: 0.5rem;
+    
+}

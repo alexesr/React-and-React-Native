@@ -1,0 +1,9 @@
+.AddEditModalContent textarea{ 
+    outline: none;
+    width: 51%;
+    resize: none;
+    overflow-y: scroll;
+}
+.AddEditModalContent textarea, .AddEditModalContent Input{
+    margin: 1rem 2rem;
+}
