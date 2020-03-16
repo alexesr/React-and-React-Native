@@ -2,7 +2,7 @@ import React from 'react';
 
 import classes from './BuildControls.module.css';
 import BuildControl from './BuildControl/BuildControl';
-import ingredient from '../../../interfaces/ingredient.interface';
+import ingredient from '../../../interfaces/ingredients.interface';
 
 interface IControls{
     label: string;

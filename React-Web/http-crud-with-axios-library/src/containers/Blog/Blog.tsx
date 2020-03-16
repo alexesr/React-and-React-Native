@@ -1,9 +1,10 @@
 import React, { Component} from 'react';
-import { Route, RouteComponentProps, withRouter, Redirect } from 'react-router-dom';
+import { Route, RouteComponentProps, withRouter } from 'react-router-dom';
 
 import './Blog.css';
-import Posts from './Posts/Posts';
-import NewPost from './NewPost/NewPost';
+import Posts from './Posts/Posts'; // every import informs webpack that this is going to be include in the global bundle
+import AsyncComponent from '../../hoc/AsyncComponent';
+//import NewPost from './NewPost/NewPost';
 import { NavLink , Switch } from 'react-router-dom';
 //NavLink instead of Link object to style depending on selected
 
@@ -12,6 +13,10 @@ interface IProps extends RouteComponentProps{}
 interface IState{
     auth: boolean;
 }
+
+const AsyncNewPost = AsyncComponent(() => {
+    return import ('./NewPost/NewPost');
+})
 
 class Blog extends Component<IProps,IState> {
     state = {
@@ -42,7 +47,7 @@ class Blog extends Component<IProps,IState> {
                 </header>
                 {/*<Route path="/" exact render={()=><h1>Home</h1>}/>*/}
                 <Switch> {/* to only render 1 single route at the time */}
-                    {this.state.auth?<Route path="/new-post" exact component ={NewPost}/>:null /*guard*/} 
+                    {this.state.auth?<Route path="/new-post" exact component ={AsyncNewPost}/>:null /*guard*/} 
                     <Route path="/posts" component ={Posts}/>
                     <Route render={()=><h1>Not found</h1>}/>
                     {/*<Redirect from="/" to="/posts"/>/*}

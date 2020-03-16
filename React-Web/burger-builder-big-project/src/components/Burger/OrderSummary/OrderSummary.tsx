@@ -1,6 +1,6 @@
 import React , { Fragment } from 'react';
 
-import ingredients from '../../../interfaces/ingredient.interface';
+import ingredients from '../../../interfaces/ingredients.interface';
 import Button from '../../UI/Button/Button';
 
 interface IProps{

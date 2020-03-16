@@ -2,15 +2,16 @@ import React from 'react';
 
 import classes from './Burger.module.css';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
+import ingredients from '../../interfaces/ingredients.interface';
 
 interface IProps{
-    ingredients: any;
+    ingredients: ingredients;
 }
 
 const Burger = (props: IProps) => {
     let transformedIngredients = Object.keys(props.ingredients)
         .map(igKey=>{
-            return [...Array(props.ingredients[igKey])].map((_,i)=>{
+            return [...Array(props.ingredients[igKey as keyof ingredients])].map((_,i)=>{
                 return <BurgerIngredient key={igKey + i} type={igKey}/>
             })
         }) //.reduce to flatten the array

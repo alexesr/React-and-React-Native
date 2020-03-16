@@ -2,17 +2,18 @@ import React, { Component, Fragment } from 'react';
 
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
-import ingredient from '../../interfaces/ingredient.interface';
+import ingredients from '../../interfaces/ingredients.interface';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import axios from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import { RouteComponentProps } from 'react-router-dom';
 
-interface IProps{
+interface IProps extends RouteComponentProps{
 }
 interface IState{
-    ingredients: ingredient;
+    ingredients: ingredients;
     totalPrice: number;
     purchasable: boolean;
     purchasing: boolean;
@@ -28,7 +29,7 @@ const INGREDIENT_PRICES ={
 }
 
 interface order{
-    ingredients: ingredient;
+    ingredients: ingredients;
     price: number;
     customer: {
         name: string;
@@ -57,17 +58,17 @@ class BurgerBuilder extends Component<IProps,IState>{
         error: false
     };
 
-    updatePurchaseState(ingredients: ingredient){
+    updatePurchaseState(ingredients: ingredients){
         const sum = Object.keys(ingredients)
             .map(igKey=>{
-                return ingredients[igKey as keyof ingredient];
+                return ingredients[igKey as keyof ingredients];
             })
             .reduce((sum,el)=>{
                 return sum + el;
             },0);
         this.setState({purchasable: sum > 0});
     }
-    addIngredientHanlder = (type: keyof ingredient): void =>{
+    addIngredientHanlder = (type: keyof ingredients): void =>{
         const oldCount = this.state.ingredients[type];
         const updatedIngredients = {
             ...this.state.ingredients
@@ -79,7 +80,7 @@ class BurgerBuilder extends Component<IProps,IState>{
         this.setState({totalPrice: newPrice, ingredients: updatedIngredients});
         this.updatePurchaseState(updatedIngredients);
     }
-    removeIngredientHandler = (type: keyof ingredient): void =>{
+    removeIngredientHandler = (type: keyof ingredients): void =>{
         const oldCount = this.state.ingredients[type];
         if(oldCount < 1){
             return;
@@ -104,10 +105,12 @@ class BurgerBuilder extends Component<IProps,IState>{
     }
 
     componentDidMount(){
+        console.log(this.props);
         axios.get('/ingredients.json')
             .then(response=>{
                 console.log(response);
                 this.setState({ingredients: response.data});
+                this.updatePurchaseState(response.data);
             })
             .catch(error=>{
                 console.log(error);
@@ -116,7 +119,16 @@ class BurgerBuilder extends Component<IProps,IState>{
     }
 
     purchaseContinueHandler = () =>{
-        this.setState({loading:true});
+        const queryParams = [];
+        for(let i in this.state.ingredients){
+            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i as keyof ingredients]));
+        }
+        const queryString = queryParams.join('&');
+        this.props.history.push({
+            pathname: '/checkout',
+            search: '?' + queryString
+        });
+        /*this.setState({loading:true});
         const order: order ={
             ingredients: this.state.ingredients,
             price: this.state.totalPrice, //recalculate in server
@@ -137,16 +149,16 @@ class BurgerBuilder extends Component<IProps,IState>{
             },)
             .catch(error=>{
                 this.setState({loading:false,purchasing: false});
-            }); //.firebase endpoint
+            }); //.firebase endpoint*/
     }   
 
     render(){
-        let isDisabled = new Map<keyof ingredient,boolean>();
+        let isDisabled = new Map<keyof ingredients,boolean>();
         const disabledInfo ={
             ...this.state.ingredients
         };
         for(let key in disabledInfo){
-            let asKey = key as keyof ingredient;
+            let asKey = key as keyof ingredients;
             isDisabled.set(asKey,disabledInfo[asKey] <= 0);
         }
         let orderSummary=null;
