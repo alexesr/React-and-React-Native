@@ -181,7 +181,10 @@ class PostsWindow extends Component<IProps,IState>{
         });
     }
     searchHandler = () =>{
-        this.props.history.replace(`?filter=${this.state.searchString}`);
+        this.props.history.push({
+            pathname: '/',
+            search: `?filter=${this.state.searchString}` 
+        });
     }
     getFilterString = (): string =>{
         let filterString = queryString.parseUrl(this.props.location.search).query.filter as string;
