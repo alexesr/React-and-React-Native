@@ -47,7 +47,6 @@ class PostsWindow extends Component<IProps,IState>{
         waitingHttpRequest: false,
         searchString:queryString.parseUrl(this.props.location.search).query.filter as string
     }
-    locationListener: any;
     httpInstance: PostHTTP = new PostHTTP(); 
     componentDidMount(){
         // getting data for the first time
@@ -135,9 +134,11 @@ class PostsWindow extends Component<IProps,IState>{
             let postsCopy = this.getPostsCopy();
             let post: post={title:this.state.title,description:this.state.description,_id:''};
             if(this.state.modalAction === modalAction.submit){
-                postsCopy.push(post);
                 this.httpInstance.submitPost(post)
                     .then(response=>{
+                        //console.log('push response:',(response as any).data._id);
+                        post._id=(response as any).data._id;
+                        postsCopy.push(post);
                         console.log('insertion successfully made',response);
                         this.updatePostsAndDismissModal(postsCopy);
                     })
@@ -146,7 +147,9 @@ class PostsWindow extends Component<IProps,IState>{
                         this.noWaitingHttpRequest();
                     });
             }else if(this.state.postIndex>-1){
-                this.httpInstance.updatePost(postsCopy[this.state.postIndex]._id,post)
+                //edit mode
+                post._id=postsCopy[this.state.postIndex]._id;
+                this.httpInstance.updatePost(post)
                     .then(response=>{
                         console.log('edition successfully made',response);
                         postsCopy[this.state.postIndex].title=this.state.title;
@@ -161,7 +164,7 @@ class PostsWindow extends Component<IProps,IState>{
         }else if(this.state.modalAction === modalAction.delete){
             this.httpInstance.deletePost(this.state.posts[this.state.postIndex]._id)
                 .then(response=>{
-                    console.log('successful deletion');
+                    console.log('successfully deleted');
                     let postsCopy = this.getPostsCopy();
                     postsCopy.splice(this.state.postIndex,1);
                     this.updatePostsAndDismissModal(postsCopy);

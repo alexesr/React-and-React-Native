@@ -1,4 +1,4 @@
-import React , { FormEventHandler, ChangeEvent, ReactNode } from 'react';
+import React , { FormEventHandler} from 'react';
 
 import classes from './SearchBar.module.css';
 import Input from '../Input/Input';
@@ -14,7 +14,7 @@ interface IProps {
 const SearchBar = (props: IProps) => {
     let searchButton: HTMLElement | null;
     const onEnterUpHandler = (event: KeyboardEvent) =>{
-        if(event.key=='Enter'){
+        if(event.key==='Enter'){
             (searchButton as HTMLElement).click();
         }
     }

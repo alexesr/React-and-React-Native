@@ -35,8 +35,8 @@ export default class PostHTTP{
                 reject(error);
             });
     });
-    public updatePost = (_id:string,post: post) => new Promise((resolve,reject)=>{
-        axios.put(`/api/posts/${_id}`,{title:post.title,description:post.description})
+    public updatePost = (post: post) => new Promise((resolve,reject)=>{
+        axios.put(`/api/posts/${post._id}`,{title:post.title,description:post.description})
             .then(response=>{
                 console.log('response of editPost()',response);
                 resolve(response);

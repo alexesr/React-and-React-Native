@@ -11,7 +11,8 @@ exports.savePost = (req,res,next) =>{
         .save()
         .then(createdPost =>{
             res.status(201).json({
-                message: 'Post added successfully'
+                message: 'Post added successfully',
+                _id:createdPost._id
             });
         }).catch(error=>{
             console.log('error in saving post',error);
