@@ -1,7 +1,7 @@
-import React , { Fragment , Component } from 'react';
+import React , { Fragment, Component } from 'react';
 
 import Modal from '../../components/UI/Modal/Modal';
-import axios, { AxiosInstance, AxiosError } from 'axios';
+import { AxiosInstance, AxiosError } from 'axios';
 
 const withErrorHandler = (WrappedComponent: any , axios: AxiosInstance) =>{
     interface IProps{
@@ -10,7 +10,7 @@ const withErrorHandler = (WrappedComponent: any , axios: AxiosInstance) =>{
     interface IState{
         error: AxiosError
     }
-    const axiosErrorNullInstance: AxiosError={config:{},isAxiosError:false,name:'',message:'',toJSON: ()=> new Object()}; 
+    const axiosErrorNullInstance: AxiosError= {config:{},isAxiosError:false,name:'',message:'',toJSON: ()=> new Object()}; 
     return class extends Component<IProps,IState> {
         state = {
             error: axiosErrorNullInstance

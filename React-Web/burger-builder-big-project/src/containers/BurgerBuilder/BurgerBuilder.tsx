@@ -28,21 +28,6 @@ const INGREDIENT_PRICES ={
     bacon: 0.7
 }
 
-interface order{
-    ingredients: ingredients;
-    price: number;
-    customer: {
-        name: string;
-        address : {
-            street: string;
-            zipCode: string;
-            country: string;
-        }
-        email: string;
-    }
-    deliveryMethod: string;
-}
-
 class BurgerBuilder extends Component<IProps,IState>{
     state = {
         ingredients: {
@@ -123,33 +108,12 @@ class BurgerBuilder extends Component<IProps,IState>{
         for(let i in this.state.ingredients){
             queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i as keyof ingredients]));
         }
+        queryParams.push('price='+this.state.totalPrice);
         const queryString = queryParams.join('&');
         this.props.history.push({
             pathname: '/checkout',
             search: '?' + queryString
         });
-        /*this.setState({loading:true});
-        const order: order ={
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice, //recalculate in server
-            customer: {
-                name: 'Miguel Muñoz',
-                address: {
-                    street: 'Teststreet 1',
-                    zipCode: '34313',
-                    country: 'Mexico'
-                },
-                email: 'test@test.com'
-            },
-            deliveryMethod: 'fastest'
-        };
-        axios.post('/orders.json',order)
-            .then(response =>{
-                this.setState({loading:false,purchasing: false});
-            },)
-            .catch(error=>{
-                this.setState({loading:false,purchasing: false});
-            }); //.firebase endpoint*/
     }   
 
     render(){
