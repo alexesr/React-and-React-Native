@@ -5,7 +5,6 @@ import post from '../../../interfaces/post/post.interface';
 import Post from '../../../components/Post/Post';
 import axios from '../../../axios';
 import './Posts.css';
-import { Link } from 'react-router-dom';
 import { RouteComponentProps, withRouter } from 'react-router';
 import FullPost from '../FullPost/FullPost';
 
