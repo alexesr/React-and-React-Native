@@ -1,11 +1,19 @@
 
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch , NavLink , Redirect } from 'react-router-dom';
 
 import Courses from './containers/Courses/Courses';
 import Users from './containers/Users/Users';
 
 class App extends Component {
+  navActiveStyle = {
+    color:'#fa923f',
+    textDecoration: 'underline'
+  };
+  navStyle={
+    margin: '10px',
+    display: 'inline-block'
+  }
   render () {
     return (
       /*<div className="App">
@@ -21,10 +29,28 @@ class App extends Component {
         </ol>
       </div>*/
       <div className="App">
+        <header>
+          <nav>
+              <ul style={{listStyle: 'none' , margin: 'auto', padding: '0'}}>
+                  <li style={this.navStyle}><NavLink 
+                          to="/courses"
+                          exact  //exact to validate not only as preffix
+                          activeStyle={this.navActiveStyle}
+                      >Courses</NavLink></li>
+                  <li style={this.navStyle}><NavLink 
+                          to="/users"
+                          exact
+                          activeStyle={this.navActiveStyle}
+                  >Users</NavLink></li>
+              </ul>
+          </nav>
+        </header>
         <Switch>
+          <Redirect from ='/' exact to="/courses"/>
+          <Redirect from ='/all-courses' to="/courses"/>
           <Route path="/courses" component={Courses}/>
           <Route path="/users" component={Users}/>
-          <Route path="/" render={()=><h1>Not Found</h1>}/>
+          <Route render={()=><h1 style={{textAlign: 'center'}}>Not Found</h1>}/>
         </Switch>
       </div>
     );

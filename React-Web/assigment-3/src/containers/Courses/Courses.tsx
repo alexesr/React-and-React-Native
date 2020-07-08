@@ -1,8 +1,24 @@
 import React, { Component } from 'react';
 
 import './Courses.css';
+import { RouteComponentProps,Route } from 'react-router-dom';
 
-class Courses extends Component {
+import Course from '../Course/Course';
+
+interface IState{
+    courses: {id: number, title: string}[]
+}
+interface IProps extends RouteComponentProps{}
+
+class Courses extends Component<IProps,IState> {
+
+    courseSelectedHandler = (id: number,title: string) =>{
+        this.props.history.push({
+            pathname:'/courses/'+id,
+            search:`?title=${title}`
+        });
+    }
+
     state = {
         courses: [
             { id: 1, title: 'Angular - The Complete Guide' },
@@ -14,14 +30,15 @@ class Courses extends Component {
     render () {
         return (
             <div>
-                <h1>Amazing Udemy Courses</h1>
+                <h1 style={{textAlign:'center'}}>Amazing Udemy Courses</h1>
                 <section className="Courses">
                     {
                         this.state.courses.map( course => {
-                            return <article className="Course" key={course.id}>{course.title}</article>;
+                            return <article onClick={()=>this.courseSelectedHandler(course.id,course.title)} className="Course" key={course.id}>{course.title}</article>;
                         } )
                     }
                 </section>
+                <Route path={this.props.match.url+'/:id'} component={Course}/>
             </div>
         );
     }
